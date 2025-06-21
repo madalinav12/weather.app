@@ -1,0 +1,41 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #e0f7fa;
+  color: #333;
+  padding: 20px;
+  margin: 0;
+}
+
+#app {
+  max-width: 600px;
+  margin: auto;
+}
+
+header {
+  text-align: center;
+}
+
+.hidden {
+  display: none;
+}
+
+#controls {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+#controls input,
+#controls button,
+#controls select {
+  padding: 10px;
+  font-size: 16px;
+}
+
+#weather-display {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}

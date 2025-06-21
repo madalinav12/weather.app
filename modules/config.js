@@ -1,27 +1,17 @@
-// Înlocuiește cu cheia ta reală!
-export const API_KEY = "6fa9abbb827dd547ac43dc54057e9d81";
+export const CONFIG = {
+  API_KEY: '6fa9abbb827dd547ac43dc54057e9d81',
+  API_BASE_URL: 'https://api.openweathermap.org/data/2.5',
+  DEFAULT_UNITS: 'metric',
+  DEFAULT_LANG: 'ro',
+};
 
-export const BASE_URL = "https://api.openweathermap.org/data/2.5/weather";
+export const API_ENDPOINTS = {
+  CURRENT_WEATHER: '/weather',
+  FORECAST: '/forecast',
+};
 
-// MOCK_DATA - simulare răspuns API OpenWeather pentru București
-
-export const MOCK_DATA = {
-  name: "București",
-  main: {
-    temp: 22,
-    humidity: 60,
-  },
-  weather: [
-    {
-      description: "Cer senin",
-      icon: "01d",
-    },
-  ],
-  wind: {
-    speed: 3.6,
-  },
-  sys: {
-    sunrise: 1687004400, // timestamp unix
-    sunset: 1687051200,
-  },
+export const ERROR_MESSAGES = {
+  CITY_NOT_FOUND: 'Orașul nu a fost găsit. Încearcă din nou.',
+  NETWORK_ERROR: 'Verifică conexiunea la internet.',
+  UNKNOWN_ERROR: 'A apărut o eroare necunoscută.',
 };

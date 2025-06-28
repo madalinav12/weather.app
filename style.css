@@ -1,11 +1,13 @@
+/* Reset și font general */
 body {
   font-family: Arial, sans-serif;
-  background-color: #e0f7fa;
+  background: linear-gradient(to right, #e0f7fa, #b2ebf2);
   color: #333;
   padding: 20px;
   margin: 0;
 }
 
+/* Layout principal */
 #app {
   max-width: 600px;
   margin: auto;
@@ -15,10 +17,12 @@ header {
   text-align: center;
 }
 
+/* Element ascuns */
 .hidden {
   display: none;
 }
 
+/* Secțiune de control */
 #controls {
   display: flex;
   flex-direction: column;
@@ -31,11 +35,145 @@ header {
 #controls select {
   padding: 10px;
   font-size: 16px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  background: white;
 }
 
+/* Afișarea vremii */
 #weather-display {
   background: white;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Istoric de căutări */
+.history-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  backdrop-filter: blur(8px);
+}
+
+.history-section h3 {
+  margin-bottom: 1rem;
+  color: #004d40;
+  font-size: 1.2rem;
+}
+
+.history-list {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 1rem;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem;
+  margin-bottom: 0.5rem;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.history-item:hover {
+  background: rgba(255, 255, 255, 0.8);
+  transform: translateX(5px);
+}
+
+.history-location {
+  display: flex;
+  flex-direction: column;
+}
+
+.history-location .city {
+  font-weight: 600;
+  color: #006064;
+}
+
+.history-location .country {
+  font-size: 0.8rem;
+  color: rgba(0, 96, 100, 0.6);
+}
+
+.history-time {
+  font-size: 0.8rem;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.clear-history-btn {
+  width: 100%;
+  padding: 0.5rem;
+  background: rgba(255, 99, 99, 0.1);
+  color: #d32f2f;
+  border: 1px solid rgba(255, 99, 99, 0.3);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-history-btn:hover {
+  background: rgba(255, 99, 99, 0.2);
+}
+
+.no-history {
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+  font-style: italic;
+  padding: 1rem;
+}
+
+/* Dev Tools (opțional - pentru dezvoltatori) */
+.dev-tools {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 300px;
+  max-height: 200px;
+  background: rgba(0, 0, 0, 0.9);
+  color: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.8rem;
+  z-index: 1000;
+}
+
+.log-display {
+  max-height: 120px;
+  overflow-y: auto;
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+/* Responsive pentru mobil */
+@media (max-width: 768px) {
+  #controls {
+    flex-direction: column;
+  }
+
+  .history-section {
+    margin-top: 1rem;
+    padding: 1rem;
+  }
+
+  .history-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .dev-tools {
+    bottom: 10px;
+    right: 10px;
+    left: 10px;
+    width: auto;
+  }
 }

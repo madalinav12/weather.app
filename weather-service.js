@@ -1,19 +1,32 @@
-import { CONFIG, API_ENDPOINTS, ERROR_MESSAGES } from './config.js';
-import { MOCK_DATA } from './mock.js';
+import {
+  API_KEY,
+  API_BASE_URL,
+  DEFAULT_UNITS,
+  DEFAULT_LANG,
+  API_ENDPOINTS,
+  ERROR_MESSAGES,
+  CONFIG,
+} from './config.js';
 
+import { MOCK_DATA } from './mock.js'; // Opțional, dacă vrei fallback
+
+// Construiește URL-ul complet cu parametri
 const buildUrl = (endpoint, params = {}) => {
-  const url = new URL(CONFIG.API_BASE_URL + endpoint);
-  url.searchParams.set('appid', CONFIG.API_KEY);
-  url.searchParams.set('units', CONFIG.DEFAULT_UNITS);
-  url.searchParams.set('lang', CONFIG.DEFAULT_LANG);
+  const url = new URL(API_BASE_URL + endpoint);
+  url.searchParams.set('appid', API_KEY);
+  url.searchParams.set('units', DEFAULT_UNITS);
+  url.searchParams.set('lang', DEFAULT_LANG);
+
   Object.entries(params).forEach(([key, value]) => {
-    if (value) {
+    if (value !== undefined && value !== null) {
       url.searchParams.set(key, value);
     }
   });
+
   return url.toString();
 };
 
+// Face request-ul propriu-zis către API
 const makeRequest = async (url) => {
   try {
     const response = await fetch(url);
@@ -31,17 +44,20 @@ const makeRequest = async (url) => {
   }
 };
 
-export const getCurrentWeather = async (city) => {
+// Obține vremea pe baza numelui orașului
+const getCurrentWeather = async (city) => {
   const url = buildUrl(API_ENDPOINTS.CURRENT_WEATHER, { q: city });
   return await makeRequest(url);
 };
 
-export const getWeatherByCoords = async (lat, lon) => {
+// Obține vremea pe baza coordonatelor
+const getWeatherByCoords = async (lat, lon) => {
   const url = buildUrl(API_ENDPOINTS.CURRENT_WEATHER, { lat, lon });
   return await makeRequest(url);
 };
 
-export const getCurrentWeatherWithFallback = async (city) => {
+// Fallback: în caz că nu funcționează API-ul, returnează date simulate
+const getCurrentWeatherWithFallback = async (city) => {
   try {
     return await getCurrentWeather(city);
   } catch (error) {
@@ -53,4 +69,11 @@ export const getCurrentWeatherWithFallback = async (city) => {
       fallbackReason: error.message,
     };
   }
+};
+
+// Exportă serviciul meteo sub formă de obiect
+export const weatherService = {
+  getCurrentWeather,
+  getWeatherByCoords,
+  getCurrentWeatherWithFallback,
 };

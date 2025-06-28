@@ -25,21 +25,39 @@
           </select>
         </div>
       </header>
+
+      <!-- Istoric de căutări -->
+      <div id="history-section" class="history-section hidden">
+        <h3>Căutări recente</h3>
+        <div id="history-list" class="history-list"></div>
+        <button id="clear-history-btn" class="clear-history-btn">Șterge istoricul</button>
+      </div>
+
       <main>
         <div id="loading" class="hidden">Se încarcă...</div>
         <div id="error" class="hidden"></div>
+
         <section id="weather-display" class="hidden">
           <h2>Vremea pentru <span id="city-name"></span></h2>
           <ul>
-            <li>Temperatura: <span id="temperature"></span></li>
+            <li>Temperatura: <span id="temp"></span></li>
             <li>Umiditate: <span id="humidity"></span>%</li>
-            <li>Vânt: <span id="wind-speed"></span> km/h</li>
+            <li>Vânt: <span id="wind"></span> km/h</li>
             <li>Răsărit: <span id="sunrise"></span></li>
             <li>Apus: <span id="sunset"></span></li>
             <li>Descriere: <span id="description"></span></li>
+            <li>Iconiță: <span id="weather-icon"></span></li>
           </ul>
         </section>
       </main>
+
+      <!-- Zonă pentru loguri (opțională) -->
+      <div id="dev-tools" class="dev-tools hidden">
+        <h4>Developer Logs</h4>
+        <div id="log-display" class="log-display"></div>
+        <button id="clear-logs-btn">Clear Logs</button>
+        <button id="export-logs-btn">Export Logs</button>
+      </div>
     </div>
   </body>
 </html>

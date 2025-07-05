@@ -1,7 +1,7 @@
-import { logger } from './modules/logger.js';
-import { historyService } from './modules/history-service.js';
-import * as ui from './modules/ui-controller.js';
-import * as weather from './modules/weather-service.js';
+import { Logger } from './modules/logger.js';
+import { UIController } from './modules/ui-controller.js';
+import { HistoryService } from './modules/history-service.js';
+import { WeatherService } from './modules/weather-service.js';
 
 const initializeApp = async () => {
   logger.info('Weather App starting...');

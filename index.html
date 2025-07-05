@@ -1,63 +1,63 @@
 <!DOCTYPE html>
 <html lang="ro">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Aplicație Meteo</title>
-    <link rel="stylesheet" href="style.css" />
-    <script type="module" src="app.js" defer></script>
-  </head>
-  <body>
-    <div id="app">
-      <header>
-        <h1>Aplicație Meteo</h1>
-        <div id="controls">
-          <input type="text" id="city-input" placeholder="Introdu numele orașului" />
-          <button id="search-btn">Caută vremea</button>
-          <button id="location-btn">Folosește locația</button>
-          <select id="unit-select">
-            <option value="metric">Celsius</option>
-            <option value="imperial">Fahrenheit</option>
-          </select>
-          <select id="lang-select">
-            <option value="ro">Română</option>
-            <option value="en">Engleză</option>
-          </select>
-        </div>
-      </header>
-
-      <!-- Istoric de căutări -->
-      <div id="history-section" class="history-section hidden">
-        <h3>Căutări recente</h3>
-        <div id="history-list" class="history-list"></div>
-        <button id="clear-history-btn" class="clear-history-btn">Șterge istoricul</button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Aplicație Meteo</title>
+  <link rel="stylesheet" href="style.css" />
+  <script type="module" src="app.js" defer></script>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Aplicație Meteo</h1>
+      <div id="controls">
+        <input type="text" id="city-input" placeholder="Introdu numele orașului" />
+        <button id="search-btn">Caută vremea</button>
+        <button id="location-btn">Folosește locația</button>
+        <select id="unit-select">
+          <option value="metric">Celsius</option>
+          <option value="imperial">Fahrenheit</option>
+        </select>
+        <select id="lang-select">
+          <option value="ro">Română</option>
+          <option value="en">Engleză</option>
+        </select>
       </div>
+    </header>
 
-      <main>
-        <div id="loading" class="hidden">Se încarcă...</div>
-        <div id="error" class="hidden"></div>
-
-        <section id="weather-display" class="hidden">
-          <h2>Vremea pentru <span id="city-name"></span></h2>
-          <ul>
-            <li>Temperatura: <span id="temp"></span></li>
-            <li>Umiditate: <span id="humidity"></span>%</li>
-            <li>Vânt: <span id="wind"></span> km/h</li>
-            <li>Răsărit: <span id="sunrise"></span></li>
-            <li>Apus: <span id="sunset"></span></li>
-            <li>Descriere: <span id="description"></span></li>
-            <li>Iconiță: <span id="weather-icon"></span></li>
-          </ul>
-        </section>
-      </main>
-
-      <!-- Zonă pentru loguri (opțională) -->
-      <div id="dev-tools" class="dev-tools hidden">
-        <h4>Developer Logs</h4>
-        <div id="log-display" class="log-display"></div>
-        <button id="clear-logs-btn">Clear Logs</button>
-        <button id="export-logs-btn">Export Logs</button>
-      </div>
+    <!-- Istoric de căutări -->
+    <div id="history-section" class="history-section hidden">
+      <h3>Căutări recente</h3>
+      <div id="history-list" class="history-list"></div>
+      <button id="clear-history-btn" class="clear-history-btn">Șterge istoricul</button>
     </div>
-  </body>
+
+    <main>
+      <div id="loading" class="hidden">Se încarcă...</div>
+      <div id="error" class="hidden"></div>
+
+      <section id="weather-display" class="hidden">
+        <h2>Vremea în <span id="city-name"></span></h2>
+        <ul>
+          <li>Temperatură: <span id="temperature"></span> °C</li>
+          <li>Umiditate: <span id="humidity"></span>%</li>
+          <li>Vânt: <span id="wind-speed"></span> km/h</li>
+          <li>Descriere: <span id="description"></span></li>
+          <li>Răsărit: <span id="sunrise"></span></li>
+          <li>Apus: <span id="sunset"></span></li>
+          <li>Iconiță: <span id="weather-icon"></span></li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Zonă pentru loguri (opțională) -->
+    <div id="dev-tools" class="dev-tools hidden">
+      <h4>Developer Logs</h4>
+      <div id="log-display" class="log-display"></div>
+      <button id="clear-logs-btn">Clear Logs</button>
+      <button id="export-logs-btn">Export Logs</button>
+    </div>
+  </div>
+</body>
 </html>

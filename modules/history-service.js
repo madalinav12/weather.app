@@ -1,88 +1,70 @@
 import { CONFIG } from './config.js';
 import { logger } from './logger.js';
 
-export class HistoryService {
+class HistoryService {
   constructor() {
     this.storageKey = CONFIG.STORAGE_KEYS.SEARCH_HISTORY;
     this.maxItems = CONFIG.MAX_HISTORY_ITEMS;
+    this.history = this._loadFromStorage();
   }
 
   addLocation(weatherData) {
     try {
-      const history = this._loadFromStorage();
+      const { name: city, sys, coord, main, weather } = weatherData;
+      const timestamp = Date.now();
 
       const newEntry = {
-        city: weatherData.name,
-        country: weatherData.sys.country,
-        timestamp: Date.now(),
-        coordinates: weatherData.coord,
+        city,
+        country: sys.country,
+        coordinates: coord,
+        temperature: main.temp,
+        icon: weather?.[0]?.icon || '',
+        timestamp,
       };
 
-      // Caută dacă există deja
-      const existingIndex = history.findIndex(
+      this.history = this.history.filter(
         (item) =>
-          item.city.toLowerCase() === newEntry.city.toLowerCase() &&
-          item.country.toLowerCase() === newEntry.country.toLowerCase()
+          item.city.toLowerCase() !== city.toLowerCase() ||
+          item.country.toLowerCase() !== sys.country.toLowerCase()
       );
 
-      if (existingIndex !== -1) {
-        history.splice(existingIndex, 1); // elimină intrarea duplicat
+      this.history.unshift(newEntry);
+
+      if (this.history.length > this.maxItems) {
+        this.history = this.history.slice(0, this.maxItems);
       }
 
-      history.unshift(newEntry); // adaugă în față
-
-      if (history.length > this.maxItems) {
-        history.pop(); // elimină cea mai veche
-      }
-
-      this._saveToStorage(history);
-      logger.info(`Locație adăugată în istoric: ${newEntry.city}, ${newEntry.country}`);
-    } catch (err) {
-      logger.error('Eroare la adăugarea în istoric', err);
+      this._saveToStorage();
+    } catch (error) {
+      logger.error('Error adding location to history', error);
     }
   }
 
   getHistory() {
-    return this._loadFromStorage();
-  }
-
-  removeLocation(city) {
-    try {
-      const history = this._loadFromStorage();
-      const filtered = history.filter(
-        (item) => item.city.toLowerCase() !== city.toLowerCase()
-      );
-      this._saveToStorage(filtered);
-      logger.info(`Locație ștearsă din istoric: ${city}`);
-    } catch (err) {
-      logger.error(`Eroare la ștergerea locației din istoric: ${city}`, err);
-    }
+    return [...this.history];
   }
 
   clearHistory() {
-    try {
-      localStorage.removeItem(this.storageKey);
-      logger.info('Istoric curățat complet.');
-    } catch (err) {
-      logger.error('Eroare la ștergerea istoricului', err);
-    }
-  }
-
-  _saveToStorage(history) {
-    try {
-      localStorage.setItem(this.storageKey, JSON.stringify(history));
-    } catch (err) {
-      logger.error('Eroare la salvarea în localStorage', err);
-    }
+    this.history = [];
+    localStorage.removeItem(this.storageKey);
   }
 
   _loadFromStorage() {
     try {
       const data = localStorage.getItem(this.storageKey);
-      return data ? JSON.parse(data) : [];
-    } catch (err) {
-      logger.error('Eroare la citirea din localStorage', err);
+      if (!data) return [];
+      return JSON.parse(data);
+    } catch (error) {
+      logger.error('Error loading history from storage', error);
       return [];
+    }
+  }
+
+  _saveToStorage() {
+    try {
+      localStorage.setItem(this.storageKey, JSON.stringify(this.history));
+    } catch (error) {
+      logger.error('Error saving history to storage', error);
     }
   }
 }

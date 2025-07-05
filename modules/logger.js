@@ -1,77 +1,69 @@
-import { CONFIG } from './config.js'
+import { CONFIG } from './config.js';
 
-export class Logger {
+class Logger {
   constructor() {
-    this.enabled = CONFIG.LOGGING.ENABLED
-    this.level = CONFIG.LOGGING.LEVEL
-    this.maxLogs = CONFIG.LOGGING.MAX_LOGS
-    this.logs = []
+    this.logs = [];
+    this.maxLogs = CONFIG.LOGGING.MAX_LOGS || 100;
+    this.levels = ['debug', 'info', 'warn', 'error'];
+    this.enabled = CONFIG.LOGGING.ENABLED;
+    this.level = CONFIG.LOGGING.LEVEL;
   }
 
-  log(level, message, data) {
-    if (!this.enabled) return
+  _log(level, message, data = null) {
+    if (!this.enabled || !this._shouldLog(level)) return;
 
-    const timestamp = new Date().toISOString()
-    const logEntry = { level, message, data, timestamp }
+    const logEntry = {
+      timestamp: new Date().toISOString(),
+      level,
+      message,
+      data,
+    };
 
-    // Salvează în memorie
-    this.logs.push(logEntry)
-    if (this.logs.length > this.maxLogs) {
-      this.logs.shift()
-    }
+    this.logs.push(logEntry);
+    if (this.logs.length > this.maxLogs) this.logs.shift();
 
-    // Mapare sigură pentru console
-    const methodMap = {
-      debug: 'log',
-      info: 'info',
-      warn: 'warn',
-      error: 'error',
-    }
-
-    const method = methodMap[level] || 'log'
-    const output = `[${timestamp}] [${level.toUpperCase()}] ${message}`
-
-    try {
-      if (data !== undefined) {
-        console[method](output, data)
-      } else {
-        console[method](output)
-      }
-    } catch (err) {
-      console.log('Logger fallback:', output, data)
-    }
+    console[level](`[${logEntry.timestamp}] [${level.toUpperCase()}] ${message}`, data || '');
   }
 
-  debug(msg, data) {
-    if (['debug'].includes(this.level)) this.log('debug', msg, data)
+  _shouldLog(level) {
+    const currentIndex = this.levels.indexOf(this.level);
+    const messageIndex = this.levels.indexOf(level);
+    return messageIndex >= currentIndex;
   }
 
-  info(msg, data) {
-    if (['debug', 'info'].includes(this.level)) this.log('info', msg, data)
+  debug(message, data) {
+    this._log('debug', message, data);
   }
 
-  warn(msg, data) {
-    if (['debug', 'info', 'warn'].includes(this.level)) this.log('warn', msg, data)
+  info(message, data) {
+    this._log('info', message, data);
   }
 
-  error(msg, data) {
-    this.log('error', msg, data)
+  warn(message, data) {
+    this._log('warn', message, data);
+  }
+
+  error(message, data) {
+    this._log('error', message, data);
   }
 
   getLogs() {
-    return this.logs
+    return [...this.logs];
   }
 
   clearLogs() {
-    this.logs = []
-    console.clear()
+    this.logs = [];
+    console.clear();
   }
 
-  exportLogs() {
+  exportLogs(format = 'text') {
+    if (format === 'json') {
+      return JSON.stringify(this.logs, null, 2);
+    }
     return this.logs
-      .map(log => `[${log.timestamp}] [${log.level.toUpperCase()}] ${log.message}${log.data ? ' | ' + JSON.stringify(log.data) : ''}`)
-      .join('\n')
+      .map(log => `【${log.timestamp}】 [${log.level.toUpperCase()}] ${log.message}${log.data ? ` | ${JSON.stringify(log.data)}` : ''}`)
+      .join('\n');
   }
 }
 
-export const logger = new Logger()
+export const logger = new Logger();

@@ -1,16 +1,9 @@
-import {
-  API_KEY,
-  API_BASE_URL,
-  DEFAULT_UNITS,
-  DEFAULT_LANG,
-  API_ENDPOINTS,
-  ERROR_MESSAGES,
-  CONFIG,
-} from './config.js';
+import { API_KEY, API_BASE_URL, DEFAULT_UNITS, DEFAULT_LANG, API_ENDPOINTS, ERROR_MESSAGES } from './config.js';
+import { MOCK_DATA } from './mock.js';
 
-import { MOCK_DATA } from './mock.js'; // Opțional, dacă vrei fallback
-
-// Construiește URL-ul complet cu parametri
+/**
+ * Construiește URL-ul pentru API
+ */
 const buildUrl = (endpoint, params = {}) => {
   const url = new URL(API_BASE_URL + endpoint);
   url.searchParams.set('appid', API_KEY);
@@ -18,7 +11,7 @@ const buildUrl = (endpoint, params = {}) => {
   url.searchParams.set('lang', DEFAULT_LANG);
 
   Object.entries(params).forEach(([key, value]) => {
-    if (value !== undefined && value !== null) {
+    if (value !== undefined && value !== null && value !== '') {
       url.searchParams.set(key, value);
     }
   });
@@ -26,14 +19,23 @@ const buildUrl = (endpoint, params = {}) => {
   return url.toString();
 };
 
-// Face request-ul propriu-zis către API
+/**
+ * Cerere GET cu tratare erori
+ */
 const makeRequest = async (url) => {
   try {
     const response = await fetch(url);
     if (!response.ok) {
-      if (response.status === 404) throw new Error(ERROR_MESSAGES.CITY_NOT_FOUND);
-      if (response.status === 401) throw new Error('API Key invalid sau lipsă.');
-      throw new Error(ERROR_MESSAGES.UNKNOWN_ERROR);
+      switch (response.status) {
+        case 404:
+          throw new Error(ERROR_MESSAGES.CITY_NOT_FOUND);
+        case 401:
+          throw new Error('API Key invalid sau lipsă.');
+        case 429:
+          throw new Error('Prea multe cereri. Încearcă mai târziu.');
+        default:
+          throw new Error(ERROR_MESSAGES.UNKNOWN_ERROR);
+      }
     }
     return await response.json();
   } catch (error) {
@@ -44,20 +46,34 @@ const makeRequest = async (url) => {
   }
 };
 
-// Obține vremea pe baza numelui orașului
-const getCurrentWeather = async (city) => {
+/**
+ * Obține vremea curentă după oraș
+ */
+export const getCurrentWeather = async (city) => {
+  if (!city || typeof city !== 'string') {
+    throw new Error('Oraș invalid.');
+  }
+
   const url = buildUrl(API_ENDPOINTS.CURRENT_WEATHER, { q: city });
   return await makeRequest(url);
 };
 
-// Obține vremea pe baza coordonatelor
-const getWeatherByCoords = async (lat, lon) => {
+/**
+ * Obține vremea după coordonate
+ */
+export const getWeatherByCoords = async (lat, lon) => {
+  if (typeof lat !== 'number' || typeof lon !== 'number') {
+    throw new Error('Coordonate invalide.');
+  }
+
   const url = buildUrl(API_ENDPOINTS.CURRENT_WEATHER, { lat, lon });
   return await makeRequest(url);
 };
 
-// Fallback: în caz că nu funcționează API-ul, returnează date simulate
-const getCurrentWeatherWithFallback = async (city) => {
+/**
+ * Obține vremea cu fallback la MOCK_DATA în caz de eroare
+ */
+export const getCurrentWeatherWithFallback = async (city) => {
   try {
     return await getCurrentWeather(city);
   } catch (error) {
@@ -69,11 +85,4 @@ const getCurrentWeatherWithFallback = async (city) => {
       fallbackReason: error.message,
     };
   }
-};
-
-// Exportă serviciul meteo sub formă de obiect
-export const weatherService = {
-  getCurrentWeather,
-  getWeatherByCoords,
-  getCurrentWeatherWithFallback,
 };
